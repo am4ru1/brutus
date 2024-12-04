@@ -3,7 +3,7 @@
 <p align="center"> 
 	<img src="images/logo.jpeg" 
 		 alt="Brutus logo"
-		 width="400"/>
+		 width="150"/>
 </p>
 
 Herramienta para realizar ataques de fuerza bruta sobre el protocolo HTTP o HTTPS.
@@ -15,7 +15,7 @@ Puedes sentirte libre de utilizar diccionarios o entradas manuales.
 <p align="center">
     <img src="images/image01.png"
          alt="Brutus inicio"
-         width="400"/>
+         width="700"/>
 </p>
 
 á, é, í, ó, ú.
@@ -27,13 +27,13 @@ La herramienta comienza  obteniéndo argumentos como son la URL, usernames y pas
 <p align="center">
     <img src="images/image02.png"
          alt="Brutus atack"  
-         width="400"/>
+         width="700"/>
 </p>
 
 <p align="center">
     <img src="images/image03.png"
          alt="Brutus atack"  
-         width="400"/>
+         width="700"/>
 </p>
 
 Si se llegará a dar el caso donde estamos frente a una aplicación hecha en PHP deberás colocarar las FLAGS correspondientes -php o --php.
@@ -41,7 +41,7 @@ Si se llegará a dar el caso donde estamos frente a una aplicación hecha en PHP
 <p align="center">
     <img src="images/image04.png"
          alt="Brutus atack"  
-         width="400"/>
+         width="700"/>
 </p>
 
 Puedes utilizar la opción verbose (-v, --verbose) para tener a detalle el proceso de autenticación.
@@ -49,7 +49,7 @@ Puedes utilizar la opción verbose (-v, --verbose) para tener a detalle el proce
 <p align="center">
     <img src="images/image05.png"
          alt="Brutus atack"  
-         width="400"/>
+         width="700"/>
 </p>
 
 Si debesea recibir ayuda puedes usar la opción help (-h o --help) para ver las FLAGS disponibles
@@ -57,7 +57,7 @@ Si debesea recibir ayuda puedes usar la opción help (-h o --help) para ver las 
 <p align="center">
     <img src="images/image06.png"
          alt="Brutus atack"  
-         width="400"/>
+         width="700"/>
 </p>
 
 Requisitos
