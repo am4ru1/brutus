@@ -25,13 +25,13 @@ La herramienta comienza  obteniéndo argumentos como son la URL, usernames y pas
 <p align="center">
     <img src="images/image02.png"
          alt="Brutus atack"  
-         width="800"/>
+         width="840"/>
 </p>
 
 <p align="center">
     <img src="images/image03.png"
          alt="Brutus atack"  
-         width="800"/>
+         width="840"/>
 </p>
 
 Si se llegará a dar el caso donde estamos frente a una aplicación hecha en PHP deberás colocarar las FLAGS correspondientes -php o --php.
@@ -39,15 +39,15 @@ Si se llegará a dar el caso donde estamos frente a una aplicación hecha en PHP
 <p align="center">
     <img src="images/image04.png"
          alt="Brutus atack"  
-         width="800"/>
+         width="840"/>
 </p>
 
-Puedes utilizar la opción verbose (-v, --verbose) para tener a detalle el proceso de autenticación.
+Puedes utilizar la opción verbose (--verbose) para tener a detalle el proceso de autenticación.
 
 <p align="center">
     <img src="images/image05.png"
          alt="Brutus atack"  
-         width="800"/>
+         width="840"/>
 </p>
 
 Si debesea recibir ayuda puedes usar la opción help (-h o --help) para ver las FLAGS disponibles

