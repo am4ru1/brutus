@@ -26,7 +26,7 @@ def check_connection(url):
 
 def read_file(filename):
 	try:
-		with open(filename, "r") as file:
+		with open(filename, "r", encoding='utf-8') as file:
 			return [line.strip() for line in file.readlines() if line.strip()]
 	except FileNotFoundError:
 		print(f"\033[31m[-] File:\033[0m {filename} \033[31mwas not found\033[0m")
@@ -53,7 +53,7 @@ def brutus_panel(username, password):
 	print(f"\033[33m[INFO] Passwords = {count_password}\033[0m")
 	print(f"\033[33m[INFO] Total 	 = {total}\033[0m\n")
 
-def obtain_credentials(VERBOSE, url, username, password, time):
+def obtain_credentials(VERBOSE, url, username, password):
 	brutus_panel(len(username), len(password))
 	connection = check_connection(url)
 	print(f"[+] Estableciendo conexión: \033[32m{connection}\033[0m")
@@ -62,6 +62,7 @@ def obtain_credentials(VERBOSE, url, username, password, time):
 		print("\033[34m[+] Finding credentials...\033[0m\n")
 		for i in username:
 			for j in password:
+				time = datetime.datetime.now()
 				data = {'username': i, 'password': j}
 				r = requests.post(url, data=data, verify=False)
 				if VERBOSE:
@@ -77,7 +78,7 @@ def obtain_credentials(VERBOSE, url, username, password, time):
 		print("\033[31m[-] Fallo en conexión\033[0m")
 		sys.exit(1)
 
-def payload_PHPSESSID(VERBOSE, PHPSESSID, url, username, password, time):
+def payload_PHPSESSID(VERBOSE, PHPSESSID, url, username, password):
 	brutus_panel(len(username), len(password))
 	connection = check_connection(url)
 	print(f"[+] Estableciendo conexión: \033[32m{connection}\033[0m")
@@ -86,6 +87,7 @@ def payload_PHPSESSID(VERBOSE, PHPSESSID, url, username, password, time):
 		print("\033[34m[+] Finding credentials...\033[0m\n")
 		for i in username:
 			for j in password:
+				time = datetime.datetime.now()
 				data = {'username': i, 'password': j}
 				r = requests.post(url, data=data, verify=False)
 				if VERBOSE:
@@ -126,12 +128,11 @@ def main():
 	username, password = get_user_pass(args)
 	PHPSESSID = False
 	VERBOSE = args.verbose
-	time = datetime.datetime.now()
 
 	try:
 		if args.php and username and password:
 			PHPSESSID = True
-			credentials = payload_PHPSESSID(VERBOSE, PHPSESSID, args.target, username, password, time)
+			credentials = payload_PHPSESSID(VERBOSE, PHPSESSID, args.target, username, password)
 			if credentials:
 				print(f"\033[33m[+] Credentials:\033[0m")
 				print(f"\033[32m[+] Username is:\033[0m {credentials[0]} | \033[32mPassword is:\033[0m {credentials[1]}\n")
@@ -140,7 +141,7 @@ def main():
 				print("\033[31m[-] No valid credentials found\033[0m")
 				sys.exit(1)
 		elif username and password:
-			credentials = obtain_credentials(VERBOSE, args.target, username, password, time)
+			credentials = obtain_credentials(VERBOSE, args.target, username, password)
 			if credentials:
 				print(f"\033[33m[+] Credentials:\033[0m")
 				print(f"\033[32m[+] Username is:\033[0m {credentials[0]} | \033[32mPassword is:\033[0m {credentials[1]}\n")
